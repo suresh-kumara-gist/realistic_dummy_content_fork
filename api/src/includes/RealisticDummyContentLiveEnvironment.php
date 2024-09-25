@@ -26,7 +26,7 @@ class RealisticDummyContentLiveEnvironment extends RealisticDummyContentEnvironm
    * {@inheritdoc}
    */
   public function implementFileSaveData($data, $destination = NULL) {
-    return file_save_data($data, $destination);
+    return \Drupal::service('file.repository')->writeData($data, $destination);
   }
 
 }

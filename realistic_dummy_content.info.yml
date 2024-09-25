@@ -6,9 +6,8 @@ description: >
   directory structure, to make customized generated content. Do not enable on
   production sites.
 package: Development
-core: 8.x
-core_version_requirement: ^8 || ^9
-php: 7.x
+core_version_requirement: ^10 || ^11
+php: 8.x
 tags:
   - developer
 

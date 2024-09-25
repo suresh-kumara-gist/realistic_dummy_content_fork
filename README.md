@@ -84,52 +84,9 @@ See the [issue queue](https://drupal.org/project/issues/2253941?categories=All) 
 
 Pull requests can be filed against the [GitHub repo](https://github.com/dcycle/realistic_dummy_content).
 
-Local development and docker integration
------
-
-To evaluate, develop for and test this module you can install Docker and run, for Drupal 9:
-
-    ./scripts/deploy.sh 9
-
-For Drupal 8:
-
-    ./scripts/deploy.sh
-
-This will install a complete working development environment including a database. When you change any code, it will reflected in your environment in real time. Once you are done with your local environment run:
-
-    ./scripts/destroy.sh
-
-Continuous integration and automated tests
------
-
-Automated tests are run using
-[CircleCI](https://circleci.com/gh/dcycle/realistic_dummy_content),
-[Docker](https://www.docker.com/products/docker) and
-[PHPUnit](https://phpunit.de). Linting is being run for PHP and shell files.
-
-### 3.x branch (default)
-
-[![CircleCI](https://circleci.com/gh/dcycle/realistic_dummy_content/tree/3.x.svg?style=svg)](https://circleci.com/gh/dcycle/realistic_dummy_content/tree/3.x)
-
-### Other branches
-
-Other branches are no longer actively supported.
-
-Best practices
------
-
-We strive to adhere to best practices for software development.
-
-[![CII Best Practices](https://bestpractices.coreinfrastructure.org/projects/97/badge)](https://bestpractices.coreinfrastructure.org/projects/97)
-
 Sponsors
 -----
 
  * [Dcycle](http://dcycle.com/) (Current)
  * [The Linux Foundation](http://www.linuxfoundation.org/) (previous)
  * [CGI](http://cgi.com/) (Initial development)
-
-Drupal 9
------
-
-This project is Drupal 9-compatible.

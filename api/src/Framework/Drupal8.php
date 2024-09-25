@@ -349,7 +349,7 @@ class Drupal8 extends Framework implements FrameworkInterface {
    * {@inheritdoc}
    */
   public function getPath($type, $name) {
-    return drupal_get_path($type, $name);
+    return \Drupal::service('extension.path.resolver')->getPath($type, $name);
   }
 
   /**
