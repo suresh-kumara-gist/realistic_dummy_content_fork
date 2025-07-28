@@ -295,9 +295,9 @@ class Drupal8 extends Framework implements FrameworkInterface {
    * {@inheritdoc}
    */
   public function fieldTypeMachineName(array $info) {
-    $machine_name = isset($info['machine_name']) ? $info['machine_name'] : NULL;
-    $entity = isset($info['entity']) ? $info['entity'] : NULL;
-    $field_name = isset($info['field_name']) ? $info['field_name'] : NULL;
+    $machine_name = $info['machine_name'] ?? NULL;
+    $entity = $info['entity'] ?? NULL;
+    $field_name = $info['field_name'] ?? NULL;
 
     if ($machine_name == 'entity_reference' && $entity && $field_name) {
       $settings = $entity->getFieldDefinition($field_name)->getSettings();

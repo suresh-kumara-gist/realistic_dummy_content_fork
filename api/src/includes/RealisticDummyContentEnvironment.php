@@ -21,7 +21,7 @@ abstract class RealisticDummyContentEnvironment {
    *
    * @var null|object
    */
-  static private $env;
+  private static $env;
 
   /**
    * Get the current environment.
@@ -154,8 +154,11 @@ abstract class RealisticDummyContentEnvironment {
 
       $return = [];
       foreach ($files as $radical => $attributes) {
-
-        $return[] = new RealisticDummyContentFileGroup($radical, isset($attributes['file']) ? $attributes['file'] : NULL, isset($attributes['attributes']) ? $attributes['attributes'] : []);
+        $return[] = new RealisticDummyContentFileGroup(
+          $radical,
+          $attributes['file'] ?? NULL,
+          $attributes['attributes'] ?? []
+        );
       }
       return $return;
     }
@@ -205,7 +208,7 @@ abstract class RealisticDummyContentEnvironment {
    *
    * @throws RealisticDummyContentException
    */
-  public static function sortCandidateFiles(array $candidate_files, $extensions = NULL) {
+  public static function sortCandidateFiles(array $candidate_files, ?array $extensions = NULL) {
     foreach ($candidate_files as $candidate_filename => $candidate_file) {
       if (!is_string($candidate_filename)) {
         // Explicitly load the Exception class, because during unit tests the
@@ -236,7 +239,7 @@ abstract class RealisticDummyContentEnvironment {
    * @param array $candidate_files
    *   An array keyed by filename which contains drupal file objects. See
    *   SortCandidateFiles().
-   * @param array $extensions
+   * @param array|null $extensions
    *   (Default is NULL).
    *   If set, extensions to filter by. See SortCandidateFiles().
    *
@@ -245,7 +248,7 @@ abstract class RealisticDummyContentEnvironment {
    *
    * @throws \Exception
    */
-  public static function implementSortCandidateFiles(array $candidate_files, array $extensions = NULL) {
+  public static function implementSortCandidateFiles(array $candidate_files, array|null $extensions = NULL) {
     $return = [];
     foreach ($candidate_files as $candidate_filename => $candidate_file) {
       if (self::validCandidateFilename($candidate_filename, $extensions)) {

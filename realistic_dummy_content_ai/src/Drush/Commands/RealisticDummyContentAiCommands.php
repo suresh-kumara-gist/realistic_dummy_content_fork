@@ -6,8 +6,6 @@ namespace Drupal\realistic_dummy_content_ai\Drush\Commands;
 
 use Drupal\Core\File\FileSystemInterface;
 use Drupal\ai\AiProviderPluginManager;
-use Drupal\ai\OperationType\Chat\ChatInput;
-use Drupal\ai\OperationType\Chat\ChatMessage;
 use Drupal\ai\OperationType\TextToImage\TextToImageInput;
 use Drush\Attributes as CLI;
 use Drush\Boot\DrupalBootLevels;
@@ -42,7 +40,7 @@ class RealisticDummyContentAiCommands extends DrushCommands {
   /**
    * Generate AI images based on prompt.
    */
-  #[CLI\Command(name: 'rd_ai_images:generate-images')]  
+  #[CLI\Command(name: 'rd_ai_images:generate-images')]
   #[CLI\Argument(name: 'module', description: 'The machine name of the module where images should be placed.')]
   #[CLI\Argument(name: 'relative_path', description: 'Path within the module where images should be stored.')]
   #[CLI\Argument(name: 'count', description: 'Number of images to generate.')]
@@ -65,11 +63,11 @@ class RealisticDummyContentAiCommands extends DrushCommands {
     $overwrite = isset($options['overwrite']) && $options['overwrite'] !== FALSE;
     $size = $options['size'] ?? '1024x1024';
 
-    // Resolve destination path
+    // Resolve destination path.
     $module_path = \Drupal::service('extension.list.module')->getPath($module);
     $destination = "$module_path/$relative_path";
 
-    // Ensure directory exists and is writable
+    // Ensure directory exists and is writable.
     $this->fileSystem->prepareDirectory(
       $destination,
       FileSystemInterface::CREATE_DIRECTORY | FileSystemInterface::MODIFY_PERMISSIONS
@@ -78,8 +76,8 @@ class RealisticDummyContentAiCommands extends DrushCommands {
     $extensions = ['jpg', 'jpeg', 'png', 'gif'];
     $files = [];
 
-    // Delete existing images if overwrite is enabled
-    if ((bool) $options['overwrite']) {
+    // Delete existing images if overwrite is enabled.
+    if ((bool) $overwrite) {
       foreach ($extensions as $ext) {
         $files = array_merge($files, glob("$destination/*.$ext"));
       }
@@ -91,14 +89,14 @@ class RealisticDummyContentAiCommands extends DrushCommands {
       }
     }
 
-    // Setup provider
+    // Setup provider.
     $sets = $this->aiProviderPluginManager->getDefaultProviderForOperationType('text_to_image');
     $provider = $this->aiProviderPluginManager->createInstance($sets['provider_id']);
     $generatedFiles = [];
 
     for ($i = 0; $i < $count; $i++) {
       $seed = random_int(1, 2147483647);
-    
+
       $provider->setConfiguration([
         'response_format' => 'url',
         'accept' => 'image/png',
@@ -113,90 +111,33 @@ class RealisticDummyContentAiCommands extends DrushCommands {
         'prompt_cache_max_len' => 0,
         'num_images' => 1,
       ]);
-    
-      // Append something minor to the prompt to help induce variation
+
+      // Append something minor to the prompt to help induce variation.
       $adjustedPrompt = $prompt . ' #' . uniqid();
-    
+
       $input = new TextToImageInput($adjustedPrompt);
       $images = $provider->textToImage($input, $sets['model_id'])->getNormalized();
-    
+
       if (empty($images)) {
         throw new \RuntimeException("AI provider returned no images.");
       }
-    
+
       foreach ($images as $image) {
         $filename = $this->generateUniqueFilename($destination);
         $filepath = "$destination/$filename";
-    
+
         $this->fileSystem->saveData(
           $image->getBinary(),
           $filepath,
           FileSystemInterface::EXISTS_REPLACE
         );
-    
+
         $generatedFiles[] = $filepath;
         $this->output()->writeln("<info>Generated:</info> $filepath");
       }
     }
-    
+
     $this->output()->writeln("<comment>Total images created:</comment> " . count($generatedFiles));
-
-    // $this->fileSystem->prepareDirectory(
-    //   $destination,
-    //   FileSystemInterface::CREATE_DIRECTORY | FileSystemInterface::MODIFY_PERMISSIONS
-    // );
-
-    // if ((bool) $options['overwrite']) {
-    //   $files = glob("$destination/*.{jpg,jpeg,png,gif}", \GLOB_BRACE);
-    //   foreach ($files as $file) {
-    //     $this->fileSystem->unlink($file);
-    //   }
-    // }
-
-    // $sets = $this->aiProviderPluginManager->getDefaultProviderForOperationType('text_to_image');
-    // $provider = $this->aiProviderPluginManager->createInstance($sets['provider_id']);
-
-    // $generatedFiles = [];
-
-    // for ($i = 0; $i < $count; $i++) {
-    //   $provider->setConfiguration([
-    //     'response_format' => 'url',
-    //     'accept' => 'image/png',
-    //     'image_size' => $options['size'],
-    //     'quality' => 'standard',
-    //     'style' => 'vivid',
-    //     'seed' => random_int(1, 2147483647),
-    //     'cfg_scale' => random_int(7, 14),
-    //     'sampler' => 'K_DPMPP_2M',
-    //     'steps' => 30,
-    //     'safety_check' => TRUE,
-    //     'prompt_cache_max_len' => 0,
-    //     'num_images' => 1,
-    //   ]);
-
-    //   $input = new TextToImageInput($prompt);
-    //   $images = $provider->textToImage($input, $sets['model_id'])->getNormalized();
-
-    //   if (empty($images)) {
-    //     throw new \RuntimeException("AI provider returned no images.");
-    //   }
-
-    //   foreach ($images as $image) {
-    //     $filename = $this->generateUniqueFilename($destination);
-    //     $filepath = "$destination/$filename";
-
-    //     $this->fileSystem->saveData(
-    //       $image->getBinary(),
-    //       $filepath,
-    //       FileSystemInterface::EXISTS_REPLACE
-    //     );
-
-    //     $generatedFiles[] = $filepath;
-    //     $this->output()->writeln("<info>Generated:</info> $filepath");
-    //   }
-    // }
-
-    // $this->output()->writeln("<comment>Total images created:</comment> " . count($generatedFiles));
   }
 
   /**
