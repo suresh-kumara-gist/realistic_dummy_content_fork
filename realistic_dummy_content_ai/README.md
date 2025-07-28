@@ -127,6 +127,7 @@ The **Realistic Dummy Content AI** module is an submodule of the [Realistic Dumm
 
         3 futuristic cityscape images generated at realistic_dummy_content/realistic_dummy_content/fields/node/article/field_image
 
+        ** Enable realistic_dummy_content module and clear the cache **
 
         2. Text content generation.
 
