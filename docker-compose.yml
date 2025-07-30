@@ -3,6 +3,18 @@
 # development environment to help with development this module.
 
 services:
+
+  # We are splitting Nginx and Drupal, see
+  # https://blog.dcycle.com/blog/2022-03-25/php-apache-different-containers/
+  webserver:
+    build:
+      context: .
+      dockerfile: Dockerfile-nginx-only
+    depends_on:
+      - drupal
+    ports:
+      - "80"
+
   drupal:
     build:
       context: .
