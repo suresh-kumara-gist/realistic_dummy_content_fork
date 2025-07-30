@@ -213,19 +213,34 @@ abstract class RealisticDummyContentEnvironment {
       if (!is_string($candidate_filename)) {
         // Explicitly load the Exception class, because during unit tests the
         // registry is not present.
-        module_load_include('inc', 'realistic_dummy_content_api', 'includes/RealisticDummyContentException');
+        \Drupal::moduleHandler()->loadInclude(
+          'realistic_dummy_content_api',
+          'inc',
+          'includes/RealisticDummyContentException'
+        );
+
         throw new RealisticDummyContentException('array keys should be strings');
       }
       if (!is_object($candidate_file)) {
         // Explicitly load the Exception class, because during unit tests the
         // registry is not present.
-        module_load_include('inc', 'realistic_dummy_content_api', 'includes/RealisticDummyContentException');
+        \Drupal::moduleHandler()->loadInclude(
+          'realistic_dummy_content_api',
+          'inc',
+          'includes/RealisticDummyContentException'
+        );
+
         throw new RealisticDummyContentException('array values should be file objects');
       }
       if (strpos($candidate_filename, '/') !== FALSE) {
         // Explicitly load the Exception class, because during unit tests the
         // registry is not present.
-        module_load_include('inc', 'realistic_dummy_content_api', 'includes/RealisticDummyContentException');
+        \Drupal::moduleHandler()->loadInclude(
+          'realistic_dummy_content_api',
+          'inc',
+          'includes/RealisticDummyContentException'
+        );
+
         throw new RealisticDummyContentException('Please do not pass file paths with slashes (/) to ' . __FUNCTION__);
       }
     }
@@ -248,7 +263,7 @@ abstract class RealisticDummyContentEnvironment {
    *
    * @throws \Exception
    */
-  public static function implementSortCandidateFiles(array $candidate_files, array|null $extensions = NULL) {
+  public static function implementSortCandidateFiles(array $candidate_files, ?array $extensions = NULL) {
     $return = [];
     foreach ($candidate_files as $candidate_filename => $candidate_file) {
       if (self::validCandidateFilename($candidate_filename, $extensions)) {

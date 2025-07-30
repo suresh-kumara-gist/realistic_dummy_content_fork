@@ -56,6 +56,7 @@ class Drupal8 extends Framework implements FrameworkInterface {
       'time_range' => 0,
       'roles' => [],
     ], $info);
+
     // @phpstan-ignore-next-line
     $plugin_manager = \Drupal::service('plugin.manager.develgenerate');
     $instance = $plugin_manager->createInstance($info['entity_type'], []);
@@ -349,6 +350,7 @@ class Drupal8 extends Framework implements FrameworkInterface {
    * {@inheritdoc}
    */
   public function getPath($type, $name) {
+    // @phpstan-ignore-next-line
     return \Drupal::service('extension.path.resolver')->getPath($type, $name);
   }
 
